@@ -1,0 +1,11 @@
+<div class="container mx-auto">
+    <app-header [cart]="cart()"/>
+    <div class="bg-gradient-to-r from-cyan-300 to-green-100 p-8 shadow-2xl">
+        <div class="grid grid-cols-4 gap-10">
+            <app-product 
+            *ngFor="let product of products()"
+            [product]="product" 
+            (addToCart)="addToCart($event)" />
+        </div>
+    </div>
+</div>
