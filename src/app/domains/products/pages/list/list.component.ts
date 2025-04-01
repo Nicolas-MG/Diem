@@ -1,53 +1,72 @@
-import { Component, signal } from '@angular/core';
-import { ProductComponent } from '../../components/product/product.component';
-import { Product } from '../../../shared/models/product.model';
-import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { Component, inject, Input, signal, SimpleChanges } from '@angular/core';
+import { ProductComponent } from '@products/components/product/product.component';
+import { Product } from '@shared/models/product.model';
+
+import { RouterLinkWithHref } from '@angular/router';
+import { CartService } from '@shared/services/cart.service';
+import { ProductService } from '@shared/services/product.service';
+import { CategoryService } from '@shared/services/category.service';
+import { Category } from '@shared/models/category.model';
 
 @Component({
   selector: 'app-list',
-  imports: [ CommonModule, 
-             ProductComponent,
-             HeaderComponent
-            ],
+  imports: [
+    ProductComponent,
+    RouterLinkWithHref
+],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css'
 })
-export class ListComponent {
+export default class ListComponent {
   
   products = signal<Product[]>([]);
-  cart = signal<Product[]>([]);
+  category = signal<Category[]>([]);
+  private cartService = inject(CartService);
+  private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
+
+  @Input() category_id?: string;
 
 
-  constructor(){
-    const initProducts: Product[] = [
-      {
-        id: Date.now(),
-        title: 'Producto 1',
-        price: 1000,
-        img: 'https://picsum.photos/340/340?r=20',
-        creationAy: new Date().toISOString()
+  ngOnInit(){
+    this.getProducts();
+    this.getCategory(); 
+  }
+
+
+  ngOnChanges(changes: SimpleChanges){
+    const category_id = changes['category_id'];
+    if(category_id){
+       this.getProducts()
+    }
+  }
+
+  private getProducts(){
+    this.productService.getProducts(this.category_id)
+    .subscribe({
+      next: (product) => {
+        this.products.set(product);
       },
-      {
-        id: Date.now(),
-        title: 'Producto 2',
-        price: 2000,
-        img: 'https://picsum.photos/340/340?r=250',
-        creationAy: new Date().toISOString()
-      },
-      {
-        id: Date.now(),
-        title: 'Producto 3',
-        price: 5000,
-        img: 'https://picsum.photos/340/340?r=207',
-        creationAy: new Date().toISOString()
+      error: () =>{
+        alert("No se trajo ningun producto");
       }
-    ];
-    this.products.set(initProducts);
+    })
+  }
+
+  private getCategory(){
+    this.categoryService.getAll()
+    .subscribe({
+      next: (data) => {
+        this.category.set(data);
+      },
+      error: () =>{
+        alert("No trajo ninguna Categoria");
+      }
+    })
   }
 
 
   addToCart(product: Product) {
-    this.cart.update(prevState => [...prevState, product]);
+    this.cartService.addToCart(product)
   }
 }

@@ -1,9 +1,20 @@
-<p>
-    <input type="number" [value]="duration()" (change)="changeDuration($event)" />
-</p>
-<p>
-    <input type="text" [value]="message()" (change)="changeMessage($event)" />
-</p>
-<p>
-    <app-counter [duration]="duration()" [message]="message()" *ngIf="duration() > 0"  />
-</p>
+<div class="bg-gradient-to-r from-blue-900 via-blue-400 to-blue-200 text-white min-h-screen flex items-center justify-center p-10">
+    <div class="max-w-4xl bg-white text-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <div class="p-8">
+            <h1 class="text-4xl font-bold mb-4 text-center text-blue-950">Sobre Nosotros</h1>
+            <p class="text-lg leading-relaxed mb-6">
+                Bienvenido a <span class="font-bold text-pink-500">Tienda 19</span>, donde la pasión por la calidad y el servicio al cliente nos define. Nos dedicamos a ofrecerte los mejores productos con un enfoque en la innovación, la excelencia y la satisfacción de nuestros clientes.
+            </p>
+            <p class="text-lg leading-relaxed mb-6">
+                    Nuestro equipo está comprometido a brindarte una experiencia única, asegurándonos de que cada detalle cuente. Gracias por confiar en nosotros y ser parte de nuestra historia.
+            </p>
+            <div class="text-center">
+            <a routerLink="/" class="bg-blue-950 hover:bg-blue-400 text-white font-bold py-2 px-6 rounded-full transition duration-300">
+                    Ir al inicio
+            </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
