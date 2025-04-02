@@ -20,8 +20,7 @@ export const routes: Routes = [
             {
                 path: 'product/:id',
                 loadComponent: () => import('./domains/products/pages/product-detail/product-detail.component'),
-                data:{ RenderMode: 'ssr' }
-            }
+             }
                   ]
     },
     {
