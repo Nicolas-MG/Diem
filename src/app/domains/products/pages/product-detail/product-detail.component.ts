@@ -10,34 +10,30 @@ import { CartService } from '@shared/services/cart.service';
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.css'
 })
-export default class ProductDetailComponent {
+export class ProductDetailComponent {
   
-  @Input()id?: string;
-  product = signal<Product|null>(null);
-  cover = signal('');
+  @Input()product?: Product | null = null;
+  currentCover: string = '';
+  
   private productService = inject(ProductService);
   private cartService = inject(CartService)
 
-  ngOnInit(){
-    if(this.id){
-      this.productService.getOne(this.id)
-      .subscribe({
-        next: (product) =>{
-          this.product.set(product);
-          if(product.images.length > 0){
-            this.cover.set(product.images[0])
-          }
-        }
-      })
+  ngOnChanges() {
+    if (this.product?.images?.length) {
+      this.currentCover = this.product.images[0];
     }
   }
+
+  cover(): string {
+    return this.currentCover;
+  }
   
-  chengeCover(newImage: string){
-    this.cover.set(newImage);
+  chengeCover(img: string){
+    this.currentCover = img;
   }
 
   addToCart(){
-    const product = this.product();
+    const product = this.product;
     if(product){
       this.cartService.addToCart(product)
     }

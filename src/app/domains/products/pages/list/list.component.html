@@ -3,25 +3,35 @@
     <h2 class="text-xl font-bold mb-4">Categorías</h2>
     <ul class="space-y-2">
       <li class="hover:bg-blue-700 p-2 rounded transition">
-        <a routerLink="/"
-        class="block text-lg font-medium">All</a>
+        <a routerLink="/" class="block text-lg font-medium">All</a>
       </li>
       @for (category of category(); track category) {
         <li class="hover:bg-blue-700 p-2 rounded transition">
-          <a routerLink="/" [queryParams]="{category_id: category.id}"
-            class="block text-lg font-medium"
-          >{{ category.name }} </a>
+          <a routerLink="/" [queryParams]="{category_id: category.id}" class="block text-lg font-medium">
+            {{ category.name }}
+          </a>
         </li>
       }
     </ul>
   </div>
+
   <div class="bg-gradient-to-r p-8 shadow-2xl">
     <div class="grid grid-cols-4 gap-10">
       @for (product of products(); track product) {
         <app-product
           [product]="product"
-          (addToCart)="addToCart($event)" />
+          (addToCart)="addToCart($event)"
+          (openProduct)="openModal($event)"
+        />
       }
     </div>
+  </div>
+</div>
+
+<!-- Pop-Up -->
+<div *ngIf="showModal" class="modal-overlay">
+  <div class="modal-content">
+    <button (click)="closeModal()" class="close-button">&times;</button>
+    <app-product-detail [product]="selectedProduct"></app-product-detail>
   </div>
 </div>

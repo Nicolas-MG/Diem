@@ -1,31 +1,33 @@
-import { Component, inject, Input, signal, SimpleChanges } from '@angular/core';
-import { ProductComponent } from '@products/components/product/product.component';
+import { Component, inject, signal, SimpleChanges, input } from '@angular/core';
 import { Product } from '@shared/models/product.model';
 
+import { ProductDetailComponent } from '@products/pages/product-detail/product-detail.component'
 import { RouterLinkWithHref } from '@angular/router';
 import { CartService } from '@shared/services/cart.service';
 import { ProductService } from '@shared/services/product.service';
 import { CategoryService } from '@shared/services/category.service';
 import { Category } from '@shared/models/category.model';
+import { CommonModule } from '@angular/common';
+import { ProductComponent } from '@products/components/product/product.component';
 
 @Component({
   selector: 'app-list',
-  imports: [
-    ProductComponent,
-    RouterLinkWithHref
-],
+  imports: [ ProductComponent, RouterLinkWithHref, CommonModule, ProductDetailComponent ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css'
 })
 export default class ListComponent {
-  
+
+  selectedProduct: Product | null = null;
+  showModal: boolean = false;
+
   products = signal<Product[]>([]);
   category = signal<Category[]>([]);
   private cartService = inject(CartService);
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);
 
-  @Input() category_id?: string;
+  readonly category_id = input<string>();
 
 
   ngOnInit(){
@@ -42,7 +44,7 @@ export default class ListComponent {
   }
 
   private getProducts(){
-    this.productService.getProducts(this.category_id)
+    this.productService.getProducts(this.category_id())
     .subscribe({
       next: (product) => {
         this.products.set(product);
@@ -67,6 +69,17 @@ export default class ListComponent {
 
 
   addToCart(product: Product) {
-    this.cartService.addToCart(product)
+    this.cartService.addToCart(product);
   }
+
+  openModal(product: Product) {
+    this.selectedProduct = product;
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.selectedProduct = null;
+    this.showModal = false;
+  }
+
 }

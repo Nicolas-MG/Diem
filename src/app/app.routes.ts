@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { RenderMode } from '@angular/ssr';
 import { LayoutComponent } from "@shared/components/layout/layout.component";
 
 
@@ -16,12 +15,7 @@ export const routes: Routes = [
             {
                 path: 'about',
                 loadComponent: () => import('./domains/info/pages/about/about.component')
-            },
-            {
-                path: 'product',
-                loadComponent: () => import('./domains/products/pages/product-detail/product-detail.component'),
-                data: { renderMode: 'server' }
-             }
+            }
                   ]
     },
     {
